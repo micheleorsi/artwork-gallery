@@ -1,5 +1,7 @@
-package it.micheleorsi;
+package it.micheleorsi.domain;
 
+import it.micheleorsi.domain.Art;
+import it.micheleorsi.domain.ArtType;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
@@ -68,8 +70,8 @@ public class ArtTest
     assertThat(underTest.getName(), is("testName"));
     assertThat(underTest.getType(), is(ArtType.PAINTING));
     assertThat(underTest.getArtistName(), is("artistName"));
-    assertThat(underTest.getAskingPrice().get(), is(new BigDecimal("10")));
-    assertThat(underTest.getDateTimeCreated().get(), is(LocalDateTime.of(2016, Month.APRIL, 12, 10, 10, 20)));
+    assertThat(underTest.getAskingPrice(), is(new BigDecimal("10")));
+    assertThat(underTest.getDateTimeCreated(), is(LocalDateTime.of(2016, Month.APRIL, 12, 10, 10, 20)));
   }
 
   @Test

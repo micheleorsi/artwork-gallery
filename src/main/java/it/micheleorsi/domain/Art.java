@@ -1,26 +1,26 @@
-package it.micheleorsi;
+package it.micheleorsi.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class Art implements Comparable<Art>
+public final class Art
 {
   private final String name;
   private final ArtType type;
   private final String artistName;
-  private final Optional<BigDecimal> askingPrice;
-  private final Optional<LocalDateTime> dateTimeCreated;
+  private final BigDecimal askingPrice;
+  private final LocalDateTime dateTimeCreated;
 
-  private Art(Builder builder)
+  public Art(String name, ArtType type, String artistName, BigDecimal askingPrice,
+    LocalDateTime dateTimeCreated)
   {
-    this.name = builder.name;
-    this.type = builder.type;
-    this.artistName = builder.artistName;
-    this.askingPrice = builder.askingPrice;
-    this.dateTimeCreated = builder.dateTimeCreated;
+    this.name = name;
+    this.type = type;
+    this.artistName = artistName;
+    this.askingPrice = askingPrice;
+    this.dateTimeCreated = dateTimeCreated;
   }
 
   public ArtType getType()
@@ -28,7 +28,7 @@ public final class Art implements Comparable<Art>
     return type;
   }
 
-  public Optional<BigDecimal> getAskingPrice()
+  public BigDecimal getAskingPrice()
   {
     return askingPrice;
   }
@@ -38,7 +38,7 @@ public final class Art implements Comparable<Art>
     return artistName;
   }
 
-  public Optional<LocalDateTime> getDateTimeCreated()
+  public LocalDateTime getDateTimeCreated()
   {
     return dateTimeCreated;
   }
@@ -83,19 +83,13 @@ public final class Art implements Comparable<Art>
     return sb.toString();
   }
 
-  @Override
-  public int compareTo(Art o)
-  {
-    return this.getName().compareTo(o.getName());
-  }
-
   public static class Builder
   {
     private String name;
     private ArtType type;
     private String artistName;
-    private Optional<BigDecimal> askingPrice = Optional.empty();
-    private Optional<LocalDateTime> dateTimeCreated = Optional.empty();
+    private BigDecimal askingPrice;
+    private LocalDateTime dateTimeCreated;
 
     public Builder withName(String name)
     {
@@ -121,22 +115,28 @@ public final class Art implements Comparable<Art>
       {
         throw new IllegalStateException("mandatory fields needed");
       }
-      if(askingPrice.orElse(BigDecimal.ONE).compareTo(BigDecimal.ZERO)<=0)
+      if(Optional.ofNullable(askingPrice).orElse(BigDecimal.ONE).compareTo(BigDecimal.ZERO)<=0)
       {
         throw new IllegalArgumentException("asking price should be positive");
       }
-      return new Art(this);
+      return new Art(
+        this.name,
+        this.type,
+        this.artistName,
+        Optional.ofNullable(this.askingPrice).orElse(null),
+        Optional.ofNullable(this.dateTimeCreated).orElse(null)
+      );
     }
 
     public Builder withAskingPrice(String askingPrice)
     {
-      this.askingPrice = Optional.ofNullable(new BigDecimal(askingPrice));
+      this.askingPrice = new BigDecimal(askingPrice);
       return this;
     }
 
     public Builder withDateTimeCreated(LocalDateTime dateTimeCreated)
     {
-      this.dateTimeCreated = Optional.ofNullable(dateTimeCreated);
+      this.dateTimeCreated = dateTimeCreated;
       return this;
     }
   }
